@@ -2,13 +2,13 @@
 
 **Dirichlet-Multinomial Mixture Models for eDNA Metabarcoding Community Structure**
 
-`eDNAstructure` is an R package for fitting Bayesian Dirichlet-Multinomial Mixture (DMM) models to environmental DNA (eDNA) read count data from metabarcoding surveys. Given a sample Ã— taxon count matrix and optional environmental covariates, the model identifies latent ecological communities, estimates their taxonomic compositions, and quantifies how environmental gradients drive community membership â€” all within a fully Bayesian framework with principled uncertainty quantification.
+`eDNAstructure` is an R package for fitting Bayesian Dirichlet-Multinomial Mixture (DMM) models to environmental DNA (eDNA) read count data from metabarcoding surveys. Given a sample × taxon count matrix and optional environmental covariates, the model identifies latent ecological communities, estimates their taxonomic compositions, and quantifies how environmental gradients drive community membership — all within a fully Bayesian framework with principled uncertainty quantification.
 
 ---
 
 ## Installation
 
-### Step 1 â€” Install a C++ toolchain
+### Step 1 — Install a C++ toolchain
 
 Stan compiles models to C++ and requires a toolchain on your machine:
 
@@ -16,7 +16,7 @@ Stan compiles models to C++ and requires a toolchain on your machine:
 - **macOS**: Run `xcode-select --install` in Terminal
 - **Linux**: Install `build-essential` (Ubuntu/Debian) or equivalent
 
-### Step 2 â€” Install rstan
+### Step 2 — Install rstan
 
 ```r
 install.packages("rstan")
@@ -31,14 +31,14 @@ example(stan_model, package = "rstan", run.dontrun = TRUE)
 
 If you see sampling output without errors, Stan is ready. Full guide: <https://mc-stan.org/rstan/articles/rstan.html>
 
-### Step 3 â€” Install eDNAstructure
+### Step 3 — Install eDNAstructure
 
 ```r
 install.packages("remotes")
 remotes::install_github("pedrobdfp/eDNA_structure", upgrade = "never")
 ```
 
-During installation, a large amount of black text will appear â€” this is the Stan model compiling to C++. It only happens once. Every subsequent call to `eDNA_dmm()` goes straight to sampling with no compilation output.
+During installation, a large amount of black text will appear — this is the Stan model compiling to C++. It only happens once. Every subsequent call to `eDNA_dmm()` goes straight to sampling with no compilation output.
 
 ### Dependencies
 
@@ -46,12 +46,12 @@ Installed automatically:
 
 | Package | Purpose |
 |---------|---------|
-| `rstan` (â‰¥ 2.21) | Bayesian inference via Stan |
-| `ggplot2` (â‰¥ 3.4) | All visualizations |
+| `rstan` (≥ 2.21) | Bayesian inference via Stan |
+| `ggplot2` (≥ 3.4) | All visualizations |
 | `dplyr`, `tidyr` | Data manipulation |
-| `vegan` (â‰¥ 2.6) | NMDS ordination |
-| `posterior` (â‰¥ 1.4) | MCMC diagnostics (ESS, Rhat) |
-| `loo` (â‰¥ 2.6) | Leave-one-out cross-validation |
+| `vegan` (≥ 2.6) | NMDS ordination |
+| `posterior` (≥ 1.4) | MCMC diagnostics (ESS, Rhat) |
+| `loo` (≥ 2.6) | Leave-one-out cross-validation |
 | `scales` | Axis formatting |
 
 ---
@@ -63,10 +63,10 @@ library(eDNAstructure)
 library(dplyr)    # for pipe and data manipulation
 library(ggplot2)  # for plot customization
 
-# Option A â€” use the built-in example dataset
+# Option A — use the built-in example dataset
 data <- get_example_data()
 
-# Option B â€” simulate your own dataset with known ground truth
+# Option B — simulate your own dataset with known ground truth
 data <- simulate_eDNA_survey(
   n_communities         = 4,
   n_species             = 40,
@@ -97,7 +97,7 @@ loo_result <- eDNA_loo(data$counts, data$covariates[, c("Depth", "Distance_shore
 loo_result$plot
 
 
-# The loo_result object stores all fitted models â€” no need to refit
+# The loo_result object stores all fitted models — no need to refit
 # Extract the K=4 model directly:
 fit <- loo_result$fits[["K4"]]
 
@@ -110,7 +110,7 @@ print(fit)
 
 ##You can also plot the results!
 
-# Structure plot â€” one bar per sample, colored by community membership probability
+# Structure plot — one bar per sample, colored by community membership probability
 eDNA_dmm_structure(fit, metadata = data$covariates,
                    facet_var = "TrueCommunity", sort_var = "Depth")
 
@@ -121,7 +121,7 @@ eDNA_dmm_nmds(fit)$plot
 eDNA_dmm_beta(fit)$plot
 ```
 
-> **For a complete walkthrough** â€” including step-by-step simulation, data formatting, K selection, all visualization options, parameter recovery, and troubleshooting â€” see the **[full tutorial vignette](vignettes/tutorial.Rmd)**. It is designed to be read start to finish and assumes no prior familiarity with Bayesian mixture models.
+> **For a complete walkthrough** — including step-by-step simulation, data formatting, K selection, all visualization options, parameter recovery, and troubleshooting — see the **[full tutorial vignette](vignettes/tutorial.Rmd)**. It is designed to be read start to finish and assumes no prior familiarity with Bayesian mixture models.
 
 ---
 
@@ -129,10 +129,10 @@ eDNA_dmm_beta(fit)$plot
 
 ### Count matrix
 
-The primary input to `eDNA_dmm()` is a **sample Ã— taxon** matrix of non-negative integer read counts:
+The primary input to `eDNA_dmm()` is a **sample × taxon** matrix of non-negative integer read counts:
 
 - **Rows** = samples (stations, replicates, individuals, etc.)
-- **Columns** = taxa or ASVs â€” taxonomic annotation is not required
+- **Columns** = taxa or ASVs — taxonomic annotation is not required
 - **Values** = raw integer read counts (do not normalize)
 
 ```r
@@ -155,7 +155,7 @@ count_matrix <- long_df |>
 
 ### Covariate data frame
 
-A **sample Ã— covariate** data frame in the same row order as the count matrix. Covariates are Z-score standardized internally by default.
+A **sample × covariate** data frame in the same row order as the count matrix. Covariates are Z-score standardized internally by default.
 
 ```r
 head(data$covariates)
@@ -169,21 +169,21 @@ head(data$covariates)
 
 ## Functions
 
-### `eDNA_dmm()` â€” Fit the DMM
+### `eDNA_dmm()` — Fit the DMM
 
 The core function. Fits a Dirichlet-Multinomial Mixture model via Stan and returns an `edna_dmm_fit` object.
 
 ```r
 fit <- eDNA_dmm(
-  counts           = my_counts,   # sample Ã— taxon integer count matrix
-  covariates       = my_covs,     # sample Ã— covariate data frame, or NULL
+  counts           = my_counts,   # sample × taxon integer count matrix
+  covariates       = my_covs,     # sample × covariate data frame, or NULL
   K                = 4,           # number of latent communities to fit
   scale_covariates = TRUE,        # Z-score standardize covariates (strongly recommended)
   chains           = 1,           # number of MCMC chains (see note on label switching below)
   iter             = 4000,        # total iterations per chain (including warmup)
   warmup           = 2000,        # warmup iterations to discard
   adapt_delta      = 0.95,        # HMC target acceptance rate; increase to 0.99 if divergences
-  max_treedepth    = 12,          # increase to 14â€“15 if "max treedepth exceeded" warnings
+  max_treedepth    = 12,          # increase to 14–15 if "max treedepth exceeded" warnings
   seed             = 13,          # random seed for reproducibility
   conc             = 0.5,         # Dirichlet prior concentration: < 1 = sparse communities
   alpha_shape      = 5,           # Gamma prior shape for overdispersion parameter alpha
@@ -197,16 +197,16 @@ The returned `edna_dmm_fit` object contains:
 | Element | Description |
 |---------|-------------|
 | `sample_info` | Data frame: posterior membership probabilities and MAP assignment per sample |
-| `pi_mean` | Matrix [K Ã— S]: posterior mean community compositions |
+| `pi_mean` | Matrix [K × S]: posterior mean community compositions |
 | `beta_summary` | Data frame: covariate coefficient summaries with ESS and reliability |
 | `alpha_mean` | Scalar: posterior mean overdispersion |
 | `stan_fit` | Raw `rstan::stanfit` object for advanced diagnostics |
 
-> **On single chains:** Mixture models suffer from label switching across chains â€” "Community 1" in chain A may map to "Community 2" in chain B, making multi-chain Rhat diagnostics meaningless. A single long chain sidesteps this. Use within-chain ESS (reported by `summary()`) as your convergence criterion.
+> **On single chains:** Mixture models suffer from label switching across chains — "Community 1" in chain A may map to "Community 2" in chain B, making multi-chain Rhat diagnostics meaningless. A single long chain sidesteps this. Use within-chain ESS (reported by `summary()`) as your convergence criterion.
 
 ---
 
-### `eDNA_dmm_structure()` â€” Structure bar plot
+### `eDNA_dmm_structure()` — Structure bar plot
 
 Produces a STRUCTURE-style plot: one vertical bar per sample, divided into colored segments by posterior community membership probability.
 
@@ -219,7 +219,7 @@ p <- eDNA_dmm_structure(
   sort_var         = "Depth",        # sort samples within each panel by this variable
   community_colors = NULL,           # named hex vector (e.g. c("Community 1" = "#E63946"))
                                      # or NULL for automatic HCL palette
-  bar_width        = 0.9,            # bar width (0â€“1); 1 = no gaps between bars
+  bar_width        = 0.9,            # bar width (0–1); 1 = no gaps between bars
   x_text           = FALSE,          # show sample ID labels on x-axis?
   base_size        = 11,             # base font size in points
   title            = NULL,           # plot title; NULL = auto-generated
@@ -228,11 +228,11 @@ p <- eDNA_dmm_structure(
 )
 ```
 
-Returns a `ggplot2` object â€” save with `ggsave()` or extend with additional ggplot2 layers.
+Returns a `ggplot2` object — save with `ggsave()` or extend with additional ggplot2 layers.
 
 ---
 
-### `eDNA_dmm_nmds()` â€” NMDS ordination
+### `eDNA_dmm_nmds()` — NMDS ordination
 
 Runs NMDS on community dissimilarities and plots samples colored by their MAP community assignment. Point **size** reflects assignment certainty: larger points are more confidently assigned to a single community.
 
@@ -249,7 +249,7 @@ result <- eDNA_dmm_nmds(
   ellipse_type     = "t",        # ellipse type: "t" (robust) or "norm" (normal-based)
   community_colors = NULL,       # named hex vector or NULL for automatic palette
   size_range       = c(1.5, 5),  # point size range: c(min, max) mapped to
-                                 # 50% certainty (smallest) â†’ 100% certainty (largest)
+                                 # 50% certainty (smallest) → 100% certainty (largest)
   alpha            = 0.85,       # point transparency (0 = invisible, 1 = opaque)
   base_size        = 13,
   title            = NULL,
@@ -263,7 +263,7 @@ result$nmds   # vegan::metaMDS object (access stress value, species scores, etc.
 
 ---
 
-### `eDNA_dmm_beta()` â€” Covariate effects
+### `eDNA_dmm_beta()` — Covariate effects
 
 Overlays the prior and posterior distributions for each softmax regression coefficient. A posterior pulled away from the prior is evidence that the covariate genuinely predicts community membership.
 
@@ -274,7 +274,7 @@ result <- eDNA_dmm_beta(
                                    # "separate": one row per community, one column per covariate
   covariates_to_plot = NULL,       # character vector of covariate names to include, or NULL for all
   show_intercept     = FALSE,      # include the intercept term?
-  beta_prior_sd      = 1.0,        # prior SD â€” must match the Stan model (default: Normal(0,1))
+  beta_prior_sd      = 1.0,        # prior SD — must match the Stan model (default: Normal(0,1))
   n_prior_samples    = 4000,       # prior draws for the density curve (more = smoother)
   community_colors   = NULL,       # named hex vector or NULL
   prior_color        = "grey60",   # fill color for the prior density
@@ -292,7 +292,7 @@ result$table   # data frame: mean, 90% CI, P(direction), ESS, reliability per co
 
 ---
 
-### `eDNA_loo()` â€” K selection via LOO cross-validation
+### `eDNA_loo()` — K selection via LOO cross-validation
 
 Fits models across a range of K values and compares them using Leave-One-Out cross-validation. Returns an elbow plot and a comparison table to guide K selection.
 
@@ -321,9 +321,9 @@ loo_result$fits        # named list of edna_dmm_fit objects, one per K
 
 ---
 
-### `plot_true_compositions()` â€” Raw species composition
+### `plot_true_compositions()` — Raw species composition
 
-Visualizes the observed species frequencies per sample as stacked bars â€” the same layout as `eDNA_dmm_structure()`, allowing direct before/after comparison. Most useful before fitting to inspect the raw community signal, and with simulated data where true community labels are known.
+Visualizes the observed species frequencies per sample as stacked bars — the same layout as `eDNA_dmm_structure()`, allowing direct before/after comparison. Most useful before fitting to inspect the raw community signal, and with simulated data where true community labels are known.
 
 ```r
 p <- plot_true_compositions(
@@ -337,15 +337,15 @@ p <- plot_true_compositions(
   base_size       = 11,
   title           = NULL,
   subtitle        = NULL,
-  legend_position = "none"          # default none â€” too many taxa for a useful legend
+  legend_position = "none"          # default none — too many taxa for a useful legend
 )
 ```
 
 Returns a `ggplot2` object.
 
 ---
-### eDNA_dmm_compositions() â€” Posterior community compositions
-Visualizes the posterior mean taxonomic composition of each latent community as stacked bars â€” the model's estimate of what each community "looks like" in species space. Colors match those used in eDNA_dmm_structure() and plot_true_compositions() for direct comparison.
+### eDNA_dmm_compositions() — Posterior community compositions
+Visualizes the posterior mean taxonomic composition of each latent community as stacked bars — the model's estimate of what each community "looks like" in species space. Colors match those used in eDNA_dmm_structure() and plot_true_compositions() for direct comparison.
 ```r
 rp <- eDNA_dmm_compositions(
   fit,
@@ -354,25 +354,25 @@ rp <- eDNA_dmm_compositions(
   title           = NULL,
   subtitle        = NULL,
   legend_position = "right", # "right", "bottom", "left", "top", or "none"
-  bar_width       = 0.7      # bar width (0â€“1)
+  bar_width       = 0.7      # bar width (0–1)
 )
 ```
 
-Returns a ggplot2 object. The x-axis labels show community numbers (1, 2, 3â€¦). Pair with eDNA_dmm_structure() to connect community identities to sample assignments.
+Returns a ggplot2 object. The x-axis labels show community numbers (1, 2, 3…). Pair with eDNA_dmm_structure() to connect community identities to sample assignments.
 
 ---
 
-### `get_example_data()` â€” Built-in example dataset
+### `get_example_data()` — Built-in example dataset
 
-Returns the built-in simulated dataset: 20 samples Ã— 40 taxa across 4 communities separated by depth and distance from shore. Generated by `simulate_eDNA_survey()` with known ground truth, so fitted parameters can be compared to the true values.
+Returns the built-in simulated dataset: 20 samples × 40 taxa across 4 communities separated by depth and distance from shore. Generated by `simulate_eDNA_survey()` with known ground truth, so fitted parameters can be compared to the true values.
 
 ```r
 data <- get_example_data()
-# data$counts                â€” integer matrix [20 Ã— 40]
-# data$covariates            â€” data frame: sample_id, TrueCommunity, Depth, Distance_shore
-# data$community_compositions â€” true composition matrix [4 Ã— 40]
-# data$metab_df              â€” raw simulated metabarcoding reads
-# data$sample_metadata       â€” full simulation metadata
+# data$counts                — integer matrix [20 × 40]
+# data$covariates            — data frame: sample_id, TrueCommunity, Depth, Distance_shore
+# data$community_compositions — true composition matrix [4 × 40]
+# data$metab_df              — raw simulated metabarcoding reads
+# data$sample_metadata       — full simulation metadata
 ```
 
 ---
@@ -387,9 +387,9 @@ sim <- simulate_eDNA_survey(
   n_communities             = 4,           # number of communities K
   n_species                 = 40,          # number of species S
   samples_per_community     = 5,           # sampling stations per community
-  community_covariate_means = NULL,        # K Ã— P matrix of covariate means per community
-                                           # NULL = default 2-covariate depth Ã— shore design
-  covariate_sds             = NULL,        # K Ã— P SDs (NULL = 5 for all)
+  community_covariate_means = NULL,        # K × P matrix of covariate means per community
+                                           # NULL = default 2-covariate depth × shore design
+  covariate_sds             = NULL,        # K × P SDs (NULL = 5 for all)
   mean_read_depth           = 10000,       # mean reads per sample
   bio_reps                  = 1,           # biological replicates per station
   seq_reps                  = 1,           # sequencing technical replicates per bio rep
@@ -398,8 +398,8 @@ sim <- simulate_eDNA_survey(
   decay_rate                = 0.1,         # exponential distance decay of eDNA signal
   seed                      = 42
 )
-# sim$counts      â€” ready for eDNA_dmm()
-# sim$covariates  â€” ready for eDNA_dmm()
+# sim$counts      — ready for eDNA_dmm()
+# sim$covariates  — ready for eDNA_dmm()
 ```
 
 Or run each step individually for full control:
@@ -408,7 +408,7 @@ Or run each step individually for full control:
 community_mat   <- generate_community_compositions(
   n_communities     = 4,
   n_species         = 40,
-  n_dominant_range  = c(2, 3),     # 2â€“3 high-frequency dominant species per community
+  n_dominant_range  = c(2, 3),     # 2–3 high-frequency dominant species per community
   n_unique_low_freq = 4,           # species present only in one community
   community_groups  = c(1,2,1,2),  # group structure for shared species
   n_group_shared    = 4,           # species shared within each group
@@ -469,11 +469,11 @@ sample_metadata <- generate_sample_covariates(
 
 For sample *i*, the DMM marginalizes over a latent community assignment *z*_i:
 
-1. **Compositions**: Ï€_k ~ Dirichlet(conc Â· **1**_S) for k = 1â€¦K
-2. **Membership**: P(*z*_i = k) = softmax(Î²_0k + Î²_1k Â· x_1i + â€¦ + Î²_Pk Â· x_Pi), community K = reference
-3. **Counts**: **x**_i | *z*_i = k ~ DirichletMultinomial(N_i, Î± Â· Ï€_k)
+1. **Compositions**: π_k ~ Dirichlet(conc · **1**_S) for k = 1…K
+2. **Membership**: P(*z*_i = k) = softmax(β_0k + β_1k · x_1i + … + β_Pk · x_Pi), community K = reference
+3. **Counts**: **x**_i | *z*_i = k ~ DirichletMultinomial(N_i, α · π_k)
 
-The global overdispersion Î± absorbs both technical (PCR, sequencing) and ecological compositional variance. Marginalizing over *z*_i makes inference exact.
+The global overdispersion α absorbs both technical (PCR, sequencing) and ecological compositional variance. Marginalizing over *z*_i makes inference exact.
 
 ---
 
@@ -489,10 +489,10 @@ Increase `adapt_delta` toward `0.99`. If they persist, try lower K or verify you
 Yes. The model treats each column as a compositional unit and does not use taxonomy. ASVs give finer resolution; taxa collapse dimensionality and often converge faster.
 
 **How do I include year as a covariate?**
-Pass it as a numeric column. But if you have only a few discrete years, the linearity assumption may be too strong â€” consider fitting without year and testing it post-hoc via multinomial regression on the posterior assignments.
+Pass it as a numeric column. But if you have only a few discrete years, the linearity assumption may be too strong — consider fitting without year and testing it post-hoc via multinomial regression on the posterior assignments.
 
-**The first run takes forever â€” is something wrong?**
-No. Stan compiles the model to C++ on the first call after installation (1â€“2 minutes). All subsequent calls skip compilation. This is normal behavior for any rstan-based package.
+**The first run takes forever — is something wrong?**
+No. Stan compiles the model to C++ on the first call after installation (1–2 minutes). All subsequent calls skip compilation. This is normal behavior for any rstan-based package.
 
 ---
 
@@ -500,10 +500,10 @@ No. Stan compiles the model to C++ on the first call after installation (1â€�
 
 If you use this package in published research, please cite:
 
-> BrandÃ£o-Dias et al. (year). Multinomial mixture models from environmental DNA reveal
+> Brandão-Dias et al. (year). Multinomial mixture models from environmental DNA reveal
 > depth stability and dynamic surface turnover of marine vertebrate communities. *Under review.*
 
-> BrandÃ£o-Dias et al. (year). eDNAstructure: Dirichlet-Multinomial Mixture Models for
+> Brandão-Dias et al. (year). eDNAstructure: Dirichlet-Multinomial Mixture Models for
 > eDNA Metabarcoding Community Structure. R package version 0.1.0.
 > https://github.com/pedrobdfp/eDNA_structure
 
@@ -516,4 +516,4 @@ Please also cite Stan:
 
 ## License
 
-MIT © Pedro Brandão-Dias. See [LICENSE](LICENSE) for details.
+MIT © eDNAstructure authors
