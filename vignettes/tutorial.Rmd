@@ -1,0 +1,116 @@
+---
+title: "Getting started with eDNAstructure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with eDNAstructure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # Stan-fitting chunks are not evaluated at build time (they compile and
+  # sample, which is slow). Set eval = TRUE locally to run them.
+  eval = FALSE
+)
+```
+
+# Overview
+
+`eDNAstructure` fits Bayesian Dirichlet-Multinomial Mixture (DMM) models to eDNA
+metabarcoding read counts. Given a sample-by-taxon count matrix and optional
+environmental covariates, it identifies latent ecological communities, estimates
+their compositions, and quantifies how covariates drive community membership.
+
+This vignette is a short tour. For full argument-by-argument documentation see
+the function help pages (e.g. `?eDNA_dmm`) and the package README.
+
+```{r load}
+library(eDNAstructure)
+```
+
+# Example data
+
+The package ships a small simulated dataset with known ground truth:
+
+```{r data}
+data <- get_example_data()
+dim(data$counts)        # 20 samples x 40 taxa
+head(data$covariates)
+```
+
+You can also simulate your own dataset with controllable structure:
+
+```{r simulate}
+sim <- simulate_eDNA_survey(
+  n_communities         = 4,
+  n_species             = 40,
+  samples_per_community = 5,
+  seed                  = 2026
+)
+```
+
+# Inspect raw composition before fitting
+
+```{r raw}
+plot_true_compositions(
+  data$counts,
+  metadata  = data$covariates,
+  facet_var = "TrueCommunity"
+)
+```
+
+# Fit the model
+
+```{r fit}
+fit <- eDNA_dmm(
+  counts     = data$counts,
+  covariates = data$covariates[, c("Depth", "Distance_shore")],
+  K          = 4
+)
+
+print(fit)
+summary(fit)
+```
+
+The first call compiles the Stan model (or loads the precompiled one shipped
+with the package); subsequent calls go straight to sampling.
+
+# Choosing K with LOO cross-validation
+
+```{r loo}
+loo_result <- eDNA_loo(
+  data$counts,
+  data$covariates[, c("Depth", "Distance_shore")],
+  K_range = 2:5
+)
+loo_result$plot
+
+# All fitted models are retained — no need to refit:
+fit4 <- loo_result$fits[["K4"]]
+```
+
+# Visualize the results
+
+```{r viz}
+# STRUCTURE-style assignment bars
+eDNA_dmm_structure(fit, metadata = data$covariates,
+                   facet_var = "TrueCommunity", sort_var = "Depth")
+
+# NMDS ordination colored by community
+eDNA_dmm_nmds(fit)$plot
+
+# Prior vs posterior covariate effects
+eDNA_dmm_beta(fit)$plot
+
+# Posterior community compositions
+eDNA_dmm_compositions(fit)
+```
+
+# Where to go next
+
+- `?eDNA_dmm` — every fitting argument explained
+- `?eDNA_dmm_structure`, `?eDNA_dmm_nmds`, `?eDNA_dmm_beta` — visualization options
+- `?simulate_eDNA_survey` — the full simulation pipeline

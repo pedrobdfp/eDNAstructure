@@ -1,0 +1,48 @@
+Package: eDNAstructure
+Type: Package
+Title: Dirichlet-Multinomial Mixture Models for eDNA Metabarcoding
+Version: 0.1.0
+Authors@R:
+    person("Pedro", "BDFP", email = "pedro_bdfp@hotmail.com", role = c("aut", "cre"))
+Description: Fits Bayesian Dirichlet-Multinomial Mixture (DMM) models to
+    environmental DNA (eDNA) read count data from metabarcoding surveys. Given
+    a sample-by-taxon count matrix and optional environmental covariates, the
+    model identifies latent ecological communities, estimates their taxonomic
+    compositions, and quantifies how environmental gradients drive community
+    membership through a softmax regression, within a fully Bayesian framework
+    using Stan. Includes a mechanistic simulation pipeline for generating eDNA
+    survey datasets with known ground truth, and a suite of 'ggplot2'-based
+    visualizations (STRUCTURE-style assignment bars, NMDS ordination, and
+    prior-versus-posterior covariate effect plots).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1)
+Imports:
+    rstan (>= 2.21.0),
+    ggplot2 (>= 3.4.0),
+    dplyr (>= 1.0.0),
+    tidyr (>= 1.1.0),
+    vegan (>= 2.6.0),
+    posterior (>= 1.4.0),
+    loo (>= 2.6.0),
+    scales,
+    cowplot,
+    rlang,
+    methods,
+    grDevices,
+    stats,
+    tools,
+    utils
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    tibble
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://github.com/pedrobdfp/eDNA_structure
+BugReports: https://github.com/pedrobdfp/eDNA_structure/issues
