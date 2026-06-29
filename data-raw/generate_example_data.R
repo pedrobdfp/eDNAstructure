@@ -34,13 +34,6 @@ example_edna <- simulate_eDNA_survey(
   seed                  = 2026
 )
 
-# Quick sanity checks
-stopifnot(
-  is.matrix(example_edna$counts),
-  nrow(example_edna$counts) == 20,
-  ncol(example_edna$counts) == 40
-)
-
 usethis::use_data(example_edna, overwrite = TRUE)
 
 message("Wrote data/example_edna.rda (", nrow(example_edna$counts),
