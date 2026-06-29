@@ -35,7 +35,7 @@ If you see sampling output without errors, Stan is ready. Full guide: <https://m
 
 ```r
 install.packages("remotes")
-remotes::install_github("pedrobdfp/eDNA_structure", upgrade = "never")
+remotes::install_github("pedrobdfp/eDNAstructure", upgrade = "never")
 ```
 
 During installation, a large amount of black text will appear — this is the Stan model compiling to C++. It only happens once. Every subsequent call to `eDNA_dmm()` goes straight to sampling with no compilation output.
@@ -505,7 +505,7 @@ If you use this package in published research, please cite:
 
 > Brandão-Dias et al. (year). eDNAstructure: Dirichlet-Multinomial Mixture Models for
 > eDNA Metabarcoding Community Structure. R package version 0.1.0.
-> https://github.com/pedrobdfp/eDNA_structure
+> https://github.com/pedrobdfp/eDNAstructure
 
 Please also cite Stan:
 

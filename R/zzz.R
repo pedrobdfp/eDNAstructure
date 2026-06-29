@@ -52,7 +52,7 @@
 #' @importFrom loo loo loo_compare extract_log_lik
 #' @importFrom scales percent
 #' @importFrom stats median quantile rnorm var sd setNames reformulate runif
-#'   rbeta rgamma rnbinom rlnorm rmultinom scale
+#'   rbeta rgamma rnbinom rlnorm rmultinom
 #' @importFrom grDevices hcl
 #' @importFrom methods is slot
 #' @importFrom tools R_user_dir
